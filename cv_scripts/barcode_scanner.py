@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from pyzbar.pyzbar import decode
 
-def readBarCode():
+def readBarcode():
     camera_id = 0
     delay = 1
     window_name = 'OpenCV pyzbar'
@@ -31,5 +31,5 @@ def readBarCode():
     return inventory
 
 if __name__ == "__main__":
-    test = readBarCode()
+    test = readBarcode()
     print(test)
