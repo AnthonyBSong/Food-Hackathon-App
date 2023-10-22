@@ -4,19 +4,31 @@ function addRow(itemName,date) {
   // Get the table element
   const table = document.getElementById("fridgeList").getElementsByTagName("tbody")[0];
 
+  var diff = new Date(date) - new Date();
+  console.log("Diff" + diff);
+  var daysTillExpire = Math.ceil(diff / (1000 * 60 * 60 * 24));
+  console.log("daysTillExpire" + daysTillExpire);
+
+  //find correct pos to put item
+  var i = 0;
+  while(i < table.rows.length){
+    var row = table.rows[i];
+    var value = row.cells[1].innerText.split(" ")[1];
+    if(daysTillExpire <= parseInt(value)){
+      break;
+    }
+    i++;
+  }
   // Create a new row element
-  const newRow = table.insertRow();
+  const newRow = table.insertRow(i);
 
   // Insert cells into the new row
   const cell1 = newRow.insertCell(0);
   const cell2 = newRow.insertCell(1);
   const cell3 = newRow.insertCell(2);
   const cell4 = newRow.insertCell(3);
-  cell1.outerHTML = "<th><span class='ms-2'>"+ itemName + "</span></th>";
-  var diff = new Date(date) - new Date();
-  console.log("Diff" + diff);
-  var daysTillExpire = Math.ceil(diff / (1000 * 60 * 60 * 24));
-  console.log("daysTillExpire" + daysTillExpire);
+  cell1.outerHTML = "<th><span class='ms-2 font-weight-bold'>"+ itemName + "</span></th>";
+  
   cell2.innerHTML = "In " + daysTillExpire + " days";
   if(daysTillExpire <= 3)
     cell3.innerHTML = "<h6 class='mb-0'><span class='badge bg-danger text-white'>Use Soon</span></h6>"

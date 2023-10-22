@@ -8,11 +8,15 @@
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-        <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.3.0/mdb.min.css" />
+        <link rel="stylesheet" href="../static/styles.css">
         
         <title>Your Fridge Contents</title>
       </head>
       <body>
+        <div id="overlay-container"></div>
+            <div id="webcam-container"></div>
+        </div>
         <section class="vh-100 vw-100" style="background-color: #eee;">
             <h2>Fridge Forecast</h2>
             <h2 class="bi bi-list"></h2>
@@ -23,7 +27,7 @@
                 <div class="card">
                     <div class="card-header p-3">
                         <h5 class="mb-0"><img src="../fridgeForecastLogos/FridgeForecastLogo4.png" width="64"></img>   Your Fridge Contents</h5>
-                        <button id="addItemBtn" onclick="init()" class="float-right btn btn-primary">Add Items</button>
+                        <button id="addItemBtn" onclick="init()" class="float-right btn btn-primary">Scan Item Via Image</button>
                     </div>
                     <div class="card-body" data-mdb-perfect-scrollbar="true" style="position: relative; height: 400px">
         
@@ -43,13 +47,13 @@
                                     <!-- <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-5.webp"
                                     class="shadow-1-strong rounded-circle" alt="avatar 1"
                                     style="width: 55px; height: auto;"> -->
-                                    <span class="ms-2">Single's American Cheese</span>
+                                    <span class="ms-2 font-weight-bold">Single's American Cheese</span>
                                 </th>
                                 <td class="align-middle">
-                                    <span>In __ days</span>
+                                    <span>In 10 days</span>
                                 </td>
                                 <td class="align-middle">
-                                    <h6 class="mb-0"><span class="badge bg-warning text-white">Warning</span></h6>
+                                    <h6 class='mb-0'><span class='badge bg-success text-white'>Not Urgent</span></h6>
                                 </td>
                                 <td class="align-middle">
                                 <button type = "submit" name = "action" value = "submit" href="#!" data-mdb-toggle="tooltip" title="Done" class="btn btn-primary bg-success border-success">
@@ -57,12 +61,12 @@
                                 </button>
                                 </td>
                             </tr>
-                            <tr class="fw-normal" id="row3">
-                                <th>
+                            <!-- <tr class="fw-normal" id="row3">
+                                <th> -->
                                     <!-- <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-5.webp"
                                     class="shadow-1-strong rounded-circle" alt="avatar 1"
                                     style="width: 55px; height: auto;"> -->
-                                    <span class="ms-2">Item Name</span>
+                                    <!-- <span class="ms-2">Item Name</span>
                                 </th>
                                 <td class="align-middle">
                                     <span>In __ days</span>
@@ -79,15 +83,14 @@
                                 <form class="button-only" action="/" method="post" enctype="multipart/form-data">
                                 
                                 </form>
-                                </td>
+                                </td> -->
                             </tr>
                         </tbody>
                     </table>
         
                     </div>
                     <div class="card-footer text-end p-3">
-                        <div id="webcam-container"></div>
-                        <div id="label-container"></div>
+                        
                         <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
                         <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
                         <script type="text/javascript">
@@ -95,13 +98,22 @@
                             // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
                         
                             // the link to your model provided by Teachable Machine export panel
+                            // const URL = "https://teachablemachine.withgoogle.com/models/ENGPgp_pR/";
                             const URL = "https://teachablemachine.withgoogle.com/models/ENGPgp_pR/";
-                        
+                            //the expiration dates for each item in days from today (found online)
+                            var exprDate = {
+                                "Hershey's": 10000,
+                                "Apple": 5,
+                                "Reese": 341,
+                                "Pear": 6
+                            };
+
                             let model, webcam, labelContainer, maxPredictions;
                             const loopnum = 0;
                             var firstTimeLoading = true;
                             // Load the image model and setup the webcam
                             async function init() {
+                                on();
                                 const modelURL = URL + "model.json";
                                 const metadataURL = URL + "metadata.json";
                         
@@ -115,21 +127,21 @@
                                 // Convenience function to setup a webcam
                                 const flip = true; // whether to flip the webcam
                                 if(firstTimeLoading){
-                                    webcam = new tmImage.Webcam(200, 200, flip); // width, height, flip
+                                    webcam = new tmImage.Webcam(400, 400, flip); // width, height, flip
                                     await webcam.setup(); // request access to the webcam
                                 }
                                 await webcam.play();
                                 window.requestAnimationFrame(loop);
                         
                                 document.getElementById("webcam-container").appendChild(webcam.canvas);
-                                labelContainer = document.getElementById("label-container");
-                                for (let i = 0; i < maxPredictions; i++) { // and class labels
-                                labelContainer.appendChild(document.createElement("div"));
-                                }
-                                
+                                // labelContainer = document.getElementById("label-container");
+                                // for (let i = 0; i < maxPredictions; i++) { // and class labels
+                                // labelContainer.appendChild(document.createElement("div"));
+                                // }
+                                webcam.canvas.style.borderRadius = "50%";
 
                                 let prediction;
-                                for(let i = 0; i< 100;i++){
+                                for(let i = 0; i< 180;i++){
                                 prediction = await model.predict(webcam.canvas);
                                 }
                                 var highest = 0;
@@ -142,37 +154,34 @@
                                 console.log(highest)
                                 console.log(prediction[highest].probability.toFixed(2))
                                 console.log(prediction[highest].className)
-                                
-                                if(prediction[highest].className == "Hershey's")
-                                    addRow(prediction[highest].className,new Date(new Date().getTime()+(10000*24*60*60*1000)));
-                                else if(prediction[highest].className == "apple")
-                                    addRow(prediction[highest].className,new Date(new Date().getTime()+(5*24*60*60*1000)));
-                                else if(prediction[highest].className == "Reese")
-                                    addRow(prediction[highest].className,new Date(new Date().getTime()+(341*24*60*60*1000)));
-                                else
-                                    addRow(prediction[highest].className,new Date(new Date().getTime()+(14*24*60*60*1000)));
-                                
+                                const nameOfBest = toTitleCase(prediction[highest].className);
+                                if(exprDate[nameOfBest] != null){
+                                    addRow(nameOfBest,new Date(new Date().getTime()+(exprDate[nameOfBest]*24*60*60*1000)));
+                                }
+                                else{
+                                    addRow(nameOfBest,new Date(new Date().getTime()+(14*24*60*60*1000)));
+                                }
                                 firstTimeLoading = false;
-                                addedItem = true;
+
+                                off();
+
                             }
                             
+                            function on() {
+                                document.getElementById("overlay-container").style.display = "block";
+                                document.getElementById("webcam-container").style.display = "block";
+                            }
 
+                            function off() {
+                                document.getElementById("overlay-container").style.display = "none";
+                                document.getElementById("webcam-container").style.display = "none";
+                            }
 
                             async function loop() {
                                 webcam.update(); // update the webcam frame
-                                await predict();
                                 window.requestAnimationFrame(loop);
                             }
 
-                            async function predict() {
-                                // predict can take in an image, video or canvas html element
-                                const prediction = await model.predict(webcam.canvas);
-                                /*for (let i = 0; i < maxPredictions; i++) {
-                                    const classPrediction =
-                                        prediction[i].className + ": " + prediction[i].probability.toFixed(2);
-                                    labelContainer.childNodes[i].innerHTML = classPrediction;
-                                }*/
-                            }
                         </script>
                         
                     </div>
