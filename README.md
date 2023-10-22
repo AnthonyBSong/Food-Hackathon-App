@@ -1,1 +1,3 @@
-# Food-Hackathon-App
+# Food-Hackathon-
+Product by Curious Cows
+
