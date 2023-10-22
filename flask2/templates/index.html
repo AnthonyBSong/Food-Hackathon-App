@@ -72,14 +72,19 @@
         <tbody>
         {% for item in items %}
             <tr>
-                <td>{{item.food}}</td>
-                <td>{{item.exp}}</td>
+                
 
                 {% if item.status < 0 %}
-                <td><button disabled type="button" class="btn btn-danger btn-sm" data-source="{{loop.index0}}" style="opacity:100">EXPIRED</button></td>
+                    <td style="color:red">{{item.food}}</td>
+                    <td>{{item.exp}}</td>
+                    <td><button disabled type="button" class="btn btn-danger btn-sm" data-source="{{loop.index0}}" style="opacity:100">EXPIRED</button></td>
                 {% elif item.status <= 5 %}
+                    <td style="color:#ffc107">{{item.food}}</td>
+                    <td>{{item.exp}}</td>
                     <td><button disabled type="button" class="btn btn-warning btn-sm" data-source="{{loop.index0}}" style="opacity:100">{{item.status}} days remaining</button></td>
                 {% else %}
+                    <td>{{item.food}}</td>
+                    <td>{{item.exp}}</td>
                     <td><button disabled type="button" class="btn btn-secondary btn-sm" data-source="{{loop.index0}}" style="opacity:100">{{item.status}} days remaining</button></td>
                 {%endif%}
                 

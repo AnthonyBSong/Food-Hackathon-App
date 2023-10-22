@@ -29,6 +29,8 @@ def update(food_id):
     if data["exp"]:
         item = items.pop(int(food_id))
         item["exp"] = data["exp"]
+        exp = datetime.strptime(data["exp"], "%Y-%m-%d").date()
+        item["status"] = (exp - now.date()).days
         smartinsert(item)
     return render_template("index.html", items=items)
 
